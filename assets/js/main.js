@@ -195,6 +195,7 @@ function revealSite() {
   welcome.classList.add('welcome--closing');
   window.setTimeout(() => {
     welcome.hidden = true;
+    $('.skip-link').hidden = false;
     site.inert = false;
     site.setAttribute('aria-hidden', 'false');
     document.body.classList.remove('is-locked');
@@ -237,6 +238,7 @@ function openInvitation() {
 
 function replayInvitation() {
   document.body.classList.add('is-locked');
+  $('.skip-link').hidden = true;
   site.inert = true;
   site.setAttribute('aria-hidden', 'true');
   welcome.hidden = false;
