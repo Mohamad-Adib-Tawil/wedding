@@ -29,11 +29,13 @@ export const weddingConfig = Object.freeze({
   },
   invitationVideo: '', // Relative asset path, e.g. assets/video/invitation.mp4
   invitationPoster: '',
-  socialPreview: 'assets/images/social-preview.svg',
+  socialPreview: 'assets/images/social-preview.png',
   wording: {
-    occasion: '',
-    opening: '',
-    closing: '',
+    occasion: 'دعوة بمحبة', // Neutral temporary copy
+    opening: 'يسعدنا أن تشاركونا فرحتنا', // Neutral temporary copy
+    closing: 'بمحبتكم تكتمل فرحتنا', // Neutral temporary copy
+    footer: 'بكل الحب، ننتظركم', // Neutral temporary copy
+    share: '',
     familyNames: [],
     story: '',
   },

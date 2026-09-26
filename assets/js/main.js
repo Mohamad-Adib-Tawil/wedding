@@ -21,7 +21,7 @@ function formatDate(date, options = {}) {
 }
 
 function zonedDateTime(dateValue, timeValue = '00:00') {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(config.weddingDate)) return null;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return null;
   if (!/^\d{2}:\d{2}$/.test(timeValue)) return null;
   const [year, month, day] = dateValue.split('-').map(Number);
   const [hour, minute] = timeValue.split(':').map(Number);
@@ -53,15 +53,18 @@ function hydrateNames() {
   document.querySelectorAll('[data-config="groomArabic"]').forEach((node) => { node.textContent = config.groomArabic; });
   document.querySelectorAll('[data-config="brideArabic"]').forEach((node) => { node.textContent = config.brideArabic; });
   document.title = `${config.groomArabic} & ${config.brideArabic} | دعوة زفاف`;
+  setText('#invitation-occasion', config.wording.occasion);
+  setText('#hero-note', config.wording.opening);
+  setText('#closing-line', config.wording.closing);
+  setText('#footer-closing', config.wording.footer);
 }
 
 function renderDate() {
   const date = parseWeddingDate();
   const hasVenue = Boolean(config.venue || config.address || config.mapsUrl);
-  const hasDate = Boolean(config.weddingDate);
   $('#date-card').hidden = !date;
   $('#venue-card').hidden = !hasVenue;
-  $('#details').hidden = !date && !hasVenue;
+  $('#details').hidden = !date && !hasVenue && $('#guest-notes-card').hidden;
   $('#details-note').hidden = true;
 
   if (!date) return;
@@ -84,7 +87,6 @@ function renderDate() {
   updateCountdown(date);
   window.setInterval(() => updateCountdown(date), 1000);
 
-  if (!hasDate) $('#date-card').hidden = true;
 }
 
 function updateCountdown(date) {
@@ -103,6 +105,18 @@ function updateCountdown(date) {
   $('#countdown').innerHTML = values.map(([value, label]) => `<div class="countdown__unit"><strong>${String(value).padStart(2, '0')}</strong><span>${label}</span></div>`).join('');
 }
 
+function renderGuestNotes() {
+  const notes = [config.audience, config.dressCode, config.guestInstructions];
+  if (config.childrenInvited !== null) notes.push(config.childrenInvited ? 'الأطفال مرحب بهم' : 'الدعوة للبالغين');
+  const list = $('#guest-notes');
+  list.replaceChildren(...notes.filter(Boolean).map((note) => {
+    const paragraph = document.createElement('p');
+    paragraph.textContent = note;
+    return paragraph;
+  }));
+  $('#guest-notes-card').hidden = list.childElementCount === 0;
+}
+
 function renderVenue() {
   $('#venue-name').textContent = config.venue;
   $('#venue-name').hidden = !config.venue;
@@ -117,7 +131,7 @@ function renderRsvp() {
   const enabled = config.rsvp.enabled && /^\d{7,15}$/.test(config.rsvp.whatsappNumber);
   $('#rsvp-section').hidden = !enabled;
   if (!enabled) return;
-  const message = config.rsvp.messageTemplate || `السلام عليكم، أود تأكيد حضوري حفل زفاف ${config.groomArabic} ورزان.`;
+  const message = config.rsvp.messageTemplate || `السلام عليكم، أود تأكيد حضوري حفل زفاف ${config.groomArabic} و${config.brideArabic}.`;
   $('#rsvp-copy').textContent = config.rsvp.deadline ? `يرجى تأكيد الحضور قبل ${config.rsvp.deadline}.` : 'يسعدنا تأكيد حضوركم عبر واتساب.';
   $('#rsvp-link').href = `https://wa.me/${config.rsvp.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
@@ -138,7 +152,8 @@ function downloadCalendarEvent() {
   const toUtc = (date) => date.toISOString().replaceAll('-', '').replaceAll(':', '').replace(/\.\d{3}/, '');
   const location = [config.venue, config.address].filter(Boolean).join(', ');
   const description = config.mapsUrl ? `الموقع: ${config.mapsUrl}` : '';
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Mohamad and Razan//Wedding Invitation//AR', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', `UID:${crypto.randomUUID()}@wedding`, `DTSTAMP:${toUtc(new Date())}`, `DTSTART:${toUtc(start)}`, `DTEND:${toUtc(end)}`, `SUMMARY:${escapeIcs(`${config.groomEnglish} & ${config.brideEnglish} Wedding`)}`, `LOCATION:${escapeIcs(location)}`, `DESCRIPTION:${escapeIcs(description)}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const uid = crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Mohamad and Razan//Wedding Invitation//AR', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', `UID:${uid}@wedding`, `DTSTAMP:${toUtc(new Date())}`, `DTSTART:${toUtc(start)}`, `DTEND:${toUtc(end)}`, `SUMMARY:${escapeIcs(`${config.groomEnglish} & ${config.brideEnglish} Wedding`)}`, `LOCATION:${escapeIcs(location)}`, `DESCRIPTION:${escapeIcs(description)}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = Object.assign(document.createElement('a'), { href: url, download: 'mohamad-and-razan-wedding.ics' });
@@ -154,7 +169,7 @@ function showToast(message) {
 }
 
 async function shareInvitation() {
-  const shareData = { title: document.title, text: `دعوة زفاف ${config.groomArabic} ورزان`, url: window.location.href };
+  const shareData = { title: document.title, text: config.wording.share || `دعوة زفاف ${config.groomArabic} و${config.brideArabic}`, url: window.location.href };
   try {
     if (navigator.share) await navigator.share(shareData);
     else if (navigator.clipboard?.writeText) {
@@ -236,6 +251,7 @@ function replayInvitation() {
 }
 
 hydrateNames();
+renderGuestNotes();
 renderDate();
 renderVenue();
 renderRsvp();

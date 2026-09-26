@@ -6,7 +6,7 @@ Arabic-first, RTL wedding invitation built with semantic HTML, CSS, and vanilla 
 
 Edit [`assets/js/wedding-config.js`](assets/js/wedding-config.js) to add the wedding date/time, IANA time zone, venue/address/maps link, RSVP WhatsApp contact, final wording, and media paths. Optional sections stay hidden when their configuration is empty. Do not put private information into this public repository unless it is intended for guests.
 
-Place the original video at `assets/video/invitation.mp4` and set `invitationVideo` to that relative path. Optionally set `invitationPoster` to a relative poster path. The player uses `playsinline`, waits for the invitation tap before loading, and reveals the details when playback ends. If no video is configured, a typographic CSS placeholder lets guests proceed through the opening experience. Replace `assets/images/social-preview.svg` after the visual identity is known.
+Place the original video at `assets/video/invitation.mp4` and set `invitationVideo` to that relative path. Optionally set `invitationPoster` to a relative poster path. The player uses `playsinline`, waits for the invitation tap before loading, and reveals the details when playback ends. If no video is configured, a typographic CSS placeholder lets guests proceed through the opening experience. Replace `assets/images/social-preview.png` when the invitation design is available. Its current typographic preview is generated from `assets/images/social-preview.svg`; update the static Open Graph and Twitter image URLs in `index.html` alongside the preview path so social crawlers see the replacement.
 
 ## Local preview
 
