@@ -1,20 +1,9 @@
 import { weddingConfig as config } from './wedding-config.js';
+import { initExperience } from './invitation-experience.js';
 
 const $ = (selector) => document.querySelector(selector);
-const welcome = $('#welcome');
-const site = $('#wedding-content');
-const video = $('#invitation-video');
-const stage = $('#media-stage');
-const placeholder = $('#media-placeholder');
-const continueButton = $('#continue-to-site');
-const soundButton = $('#sound-toggle');
 const toast = $('#toast');
 let toastTimer;
-
-function setText(selector, value) {
-  const element = $(selector);
-  if (element && value) element.textContent = value;
-}
 
 function formatDate(date, options = {}) {
   return new Intl.DateTimeFormat('ar', { timeZone: config.timeZone || undefined, ...options }).format(date);
@@ -54,12 +43,18 @@ function hydrateNames() {
   document.querySelectorAll('[data-config="brideArabic"]').forEach((node) => { node.textContent = config.brideArabic; });
   document.querySelectorAll('[data-config="groomEnglish"]').forEach((node) => { node.textContent = config.groomEnglish; });
   document.querySelectorAll('[data-config="brideEnglish"]').forEach((node) => { node.textContent = config.brideEnglish; });
+  document.querySelectorAll('[data-config="monogramGroomArabic"]').forEach((node) => { node.textContent = config.monogramGroomArabic; });
+  document.querySelectorAll('[data-config="monogramBrideArabic"]').forEach((node) => { node.textContent = config.monogramBrideArabic; });
   $('#open-invitation').setAttribute('aria-label', `افتح دعوة ${config.groomArabic} و${config.brideArabic}`);
   document.title = `${config.groomArabic} & ${config.brideArabic} | دعوة زفاف`;
-  setText('#invitation-occasion', config.wording.occasion);
-  setText('#hero-note', config.wording.opening);
-  setText('#closing-line', config.wording.closing);
-  setText('#footer-closing', config.wording.footer);
+  document.querySelectorAll('[data-wording]').forEach((node) => {
+    const wording = config.wording[node.dataset.wording];
+    if (typeof wording === 'string' && wording) node.textContent = wording;
+  });
+  if (config.wording.familyNames.length) {
+    $('#scene-families').textContent = config.wording.familyNames.join(' • ');
+    $('#scene-families').hidden = false;
+  }
 }
 
 function renderDate() {
@@ -80,6 +75,10 @@ function renderDate() {
   $('#hero-date').hidden = false;
   $('#footer-date').textContent = dateLabel;
   $('#footer-date').hidden = false;
+  $('#scene-cover-date').textContent = dateLabel;
+  $('#scene-cover-date').hidden = false;
+  $('#scene-date').textContent = dateLabel;
+  $('#scene-date').hidden = false;
   $('#event-time').textContent = config.startTime ? `الساعة ${config.startTime}${config.endTime ? ` – ${config.endTime}` : ''}` : '';
   $('#calendar-button').hidden = false;
 
@@ -131,6 +130,14 @@ function renderVenue() {
   const map = $('#map-link');
   map.hidden = !config.mapsUrl;
   if (config.mapsUrl) map.href = config.mapsUrl;
+  const sceneVenue = [config.venue, config.address].filter(Boolean).join('، ');
+  $('#scene-venue').textContent = sceneVenue;
+  $('#scene-venue').hidden = !sceneVenue;
+}
+
+function renderSceneDetails() {
+  const hasSceneDetails = !$('#scene-date').hidden || !$('#scene-venue').hidden;
+  $('[data-chapter="details"]').hidden = !hasSceneDetails;
 }
 
 function renderRsvp() {
@@ -196,82 +203,13 @@ async function copyLink() {
   }
 }
 
-function revealSite() {
-  video.pause();
-  welcome.classList.add('welcome--closing');
-  window.setTimeout(() => {
-    welcome.hidden = true;
-    $('.skip-link').hidden = false;
-    site.inert = false;
-    site.setAttribute('aria-hidden', 'false');
-    document.body.classList.remove('is-locked');
-    $('#home').setAttribute('tabindex', '-1');
-    $('#home').focus({ preventScroll: true });
-  }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 650);
-}
-
-function openInvitation() {
-  welcome.classList.add('welcome--opened');
-  stage.inert = false;
-  stage.setAttribute('aria-hidden', 'false');
-  $('#open-invitation').disabled = true;
-  if (config.invitationVideo) {
-    video.hidden = false;
-    video.src = config.invitationVideo;
-    if (config.invitationPoster) video.poster = config.invitationPoster;
-    placeholder.hidden = true;
-    continueButton.hidden = true;
-    soundButton.hidden = false;
-    video.play().then(() => soundButton.setAttribute('aria-pressed', String(!video.muted))).catch(() => {
-      video.muted = true;
-      soundButton.textContent = 'تشغيل الصوت';
-      video.play().catch(() => showToast('تعذر تشغيل الفيديو. اضغط تشغيل للمتابعة.'));
-      showToast('بدأ الفيديو دون صوت. يمكنك تشغيل الصوت من الزر.');
-    });
-    video.addEventListener('error', () => {
-      video.hidden = true;
-      video.removeAttribute('src');
-      placeholder.hidden = false;
-      continueButton.hidden = false;
-      soundButton.hidden = true;
-      showToast('تعذر تحميل الفيديو. يمكنك متابعة الدعوة.');
-    }, { once: true });
-  } else {
-    continueButton.hidden = false;
-    window.setTimeout(() => continueButton.focus(), 400);
-  }
-}
-
-function replayInvitation() {
-  document.body.classList.add('is-locked');
-  $('.skip-link').hidden = true;
-  site.inert = true;
-  site.setAttribute('aria-hidden', 'true');
-  welcome.hidden = false;
-  welcome.classList.remove('welcome--closing', 'welcome--opened');
-  stage.inert = true;
-  stage.setAttribute('aria-hidden', 'true');
-  $('#open-invitation').disabled = false;
-  video.pause();
-  video.currentTime = 0;
-  $('#open-invitation').focus();
-  window.scrollTo({ top: 0, behavior: 'instant' });
-}
-
 hydrateNames();
 renderGuestNotes();
 renderDate();
 renderVenue();
+renderSceneDetails();
 renderRsvp();
-$('#open-invitation').addEventListener('click', openInvitation);
-continueButton.addEventListener('click', revealSite);
-video.addEventListener('ended', revealSite);
+initExperience(config, showToast);
 $('#calendar-button').addEventListener('click', downloadCalendarEvent);
 $('#share-button').addEventListener('click', shareInvitation);
 $('#copy-link').addEventListener('click', copyLink);
-$('#replay-invitation').addEventListener('click', replayInvitation);
-soundButton.addEventListener('click', () => {
-  video.muted = !video.muted;
-  soundButton.setAttribute('aria-pressed', String(!video.muted));
-  soundButton.textContent = video.muted ? 'تشغيل الصوت' : 'كتم الصوت';
-});
