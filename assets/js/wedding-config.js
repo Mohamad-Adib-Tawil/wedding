@@ -7,6 +7,8 @@ export const weddingConfig = Object.freeze({
   groomEnglish: 'Mohamad Adib Tawil',
   brideArabic: 'رزان',
   brideEnglish: 'Razan',
+  monogramGroomArabic: 'م',
+  monogramBrideArabic: 'ر',
   weddingDate: '', // ISO date: YYYY-MM-DD
   startTime: '', // 24-hour local time: HH:MM
   endTime: '',
@@ -29,12 +31,21 @@ export const weddingConfig = Object.freeze({
   },
   invitationVideo: '', // Relative asset path, e.g. assets/video/invitation.mp4
   invitationPoster: '',
-  socialPreview: 'assets/images/social-preview.png',
+  socialPreview: 'assets/images/social-preview.jpg',
   wording: {
     occasion: 'دعوة بمحبة', // Neutral temporary copy
     opening: 'يسعدنا أن تشاركونا فرحتنا', // Neutral temporary copy
     closing: 'بمحبتكم تكتمل فرحتنا', // Neutral temporary copy
     footer: 'بكل الحب، ننتظركم', // Neutral temporary copy
+    heroEyebrow: 'بكل الحب',
+    sceneDetailsLead: 'بكل الحب ننتظركم',
+    countdownHeading: 'الوقت حتى لقائنا',
+    detailsHeading: 'تفاصيل لقائنا',
+    detailsSubtitle: 'ننتظر أن نشارككم هذه اللحظات',
+    dateHeading: 'الموعد',
+    guestNotesHeading: 'ملاحظات للضيوف',
+    rsvpEyebrow: 'حضوركم يسعدنا',
+    rsvpHeading: 'هل تشاركوننا فرحتنا؟',
     share: '',
     familyNames: [],
     story: '',
