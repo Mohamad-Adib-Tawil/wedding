@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#f3eee6">
+    <meta name="theme-color" content="#f4f0e9">
     <meta name="description" content="دعوة زفاف محمد أديب طويل ورزان. يسعدنا أن تشاركونا فرحتنا.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://mohamad-adib-tawil.github.io/wedding/">
@@ -32,17 +32,19 @@
     <main>
       <section class="welcome" id="welcome" aria-label="الدعوة">
         <div class="welcome__grain" aria-hidden="true"></div>
-        <div class="welcome__ornament welcome__ornament--top" aria-hidden="true">✳</div>
-        <div class="welcome__ornament welcome__ornament--bottom" aria-hidden="true">✳</div>
+        <div class="welcome__ornament welcome__ornament--top" aria-hidden="true"></div>
+        <div class="welcome__ornament welcome__ornament--bottom" aria-hidden="true"></div>
         <div class="invitation" id="invitation-card">
           <div class="invitation__frame">
+            <span class="invitation__corner invitation__corner--top" aria-hidden="true"></span>
             <div class="invitation__monogram" aria-hidden="true">م <span>&</span> ر</div>
             <p class="invitation__eyebrow" id="invitation-occasion">دعوة بمحبة</p>
             <h1 class="invitation__names"><span data-config="groomArabic">محمد أديب طويل</span><span class="invitation__ampersand">&</span><span data-config="brideArabic">رزان</span></h1>
             <span class="invitation__rule" aria-hidden="true"></span>
             <p class="invitation__prompt">المس البطاقة لفتحها</p>
+            <span class="invitation__corner invitation__corner--bottom" aria-hidden="true"></span>
           </div>
-          <button class="invitation__open" id="open-invitation" type="button" aria-label="افتح دعوة محمد أديب ورزان">
+          <button class="invitation__open" id="open-invitation" type="button" aria-label="فتح الدعوة">
             <span class="sr-only">فتح الدعوة</span>
           </button>
         </div>
@@ -70,11 +72,20 @@
         </header>
 
         <section class="hero section-wrap" id="home">
-          <p class="eyebrow">بكل الحب</p>
-          <h2 class="hero__names"><span data-config="groomArabic">محمد أديب طويل</span><span class="hero__join">و</span><span data-config="brideArabic">رزان</span></h2>
-          <p class="hero__note" id="hero-note">يسعدنا أن تشاركونا فرحتنا</p>
-          <div class="hero__date" id="hero-date" hidden></div>
-          <a class="scroll-cue" href="#details"><span>اكتشفوا التفاصيل</span><span aria-hidden="true">↓</span></a>
+          <div class="hero__copy">
+            <p class="eyebrow">بكل الحب</p>
+            <h2 class="hero__names"><span data-config="groomArabic">محمد أديب طويل</span><span class="hero__join">و</span><span data-config="brideArabic">رزان</span></h2>
+            <p class="hero__note" id="hero-note">يسعدنا أن تشاركونا فرحتنا</p>
+            <div class="hero__date" id="hero-date" hidden></div>
+            <a class="scroll-cue" href="#details"><span>اكتشفوا التفاصيل</span><span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero__art" aria-hidden="true">
+            <div class="hero__art-paper">
+              <span class="hero__art-monogram">م <span>&</span> ر</span>
+              <span class="hero__art-rule"></span>
+              <span class="hero__art-label"><span data-config="groomEnglish"></span><span> · </span><span data-config="brideEnglish"></span></span>
+            </div>
+          </div>
         </section>
 
         <section class="countdown section-wrap" id="countdown-section" hidden aria-labelledby="countdown-title">
@@ -125,7 +136,7 @@
           </div>
         </section>
 
-        <section class="closing section-wrap">
+        <section class="closing section-wrap" id="closing">
           <span class="section-heading__ornament" aria-hidden="true">✳</span>
           <p id="closing-line">بمحبتكم تكتمل فرحتنا</p>
           <div class="closing__actions">

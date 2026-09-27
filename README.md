@@ -8,6 +8,8 @@ Edit [`assets/js/wedding-config.js`](assets/js/wedding-config.js) to add the wed
 
 Place the original video at `assets/video/invitation.mp4` and set `invitationVideo` to that relative path. Optionally set `invitationPoster` to a relative poster path. The player uses `playsinline`, waits for the invitation tap before loading, and reveals the details when playback ends. If no video is configured, a typographic CSS placeholder lets guests proceed through the opening experience. Replace `assets/images/social-preview.png` when the invitation design is available. Its current typographic preview is generated from `assets/images/social-preview.svg`; update the static Open Graph and Twitter image URLs in `index.html` alongside the preview path so social crawlers see the replacement.
 
+The current stationery palette is temporary. The main colors and fonts are grouped as tokens near the top of `assets/css/styles.css`, so the final invitation can set the visual identity without changing the page structure.
+
 ## Local preview
 
 Serve the repository root with any static HTTP server (ES modules need HTTP):

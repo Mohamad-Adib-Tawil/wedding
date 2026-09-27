@@ -52,6 +52,9 @@ function parseWeddingDate() {
 function hydrateNames() {
   document.querySelectorAll('[data-config="groomArabic"]').forEach((node) => { node.textContent = config.groomArabic; });
   document.querySelectorAll('[data-config="brideArabic"]').forEach((node) => { node.textContent = config.brideArabic; });
+  document.querySelectorAll('[data-config="groomEnglish"]').forEach((node) => { node.textContent = config.groomEnglish; });
+  document.querySelectorAll('[data-config="brideEnglish"]').forEach((node) => { node.textContent = config.brideEnglish; });
+  $('#open-invitation').setAttribute('aria-label', `افتح دعوة ${config.groomArabic} و${config.brideArabic}`);
   document.title = `${config.groomArabic} & ${config.brideArabic} | دعوة زفاف`;
   setText('#invitation-occasion', config.wording.occasion);
   setText('#hero-note', config.wording.opening);
@@ -65,6 +68,9 @@ function renderDate() {
   $('#date-card').hidden = !date;
   $('#venue-card').hidden = !hasVenue;
   $('#details').hidden = !date && !hasVenue && $('#guest-notes-card').hidden;
+  const detailsAvailable = !$('#details').hidden;
+  $('.scroll-cue').href = detailsAvailable ? '#details' : '#closing';
+  $('.scroll-cue span:first-child').textContent = detailsAvailable ? 'اكتشفوا التفاصيل' : 'تابعوا الدعوة';
   $('#details-note').hidden = true;
 
   if (!date) return;
